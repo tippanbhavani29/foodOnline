@@ -205,7 +205,37 @@
   /* This section calls the slideInFromLeft animation we defined above */
   animation: 1s ease-out 0s 1 slideInFromRight;
 }
+.logo img {
+    max-width: 150px; /* Adjust logo size */
+    height: auto;
+}
 
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    flex-grow: 0;
+    position: relative;
+    z-index: 10; /* Ensures logo doesn't overlap */
+}
+
+.main-nav {
+    flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .logo img {
+        max-width: 120px;
+    }
+}
 /* ANIMATE END */
 
 /* CHOOSEN START */
