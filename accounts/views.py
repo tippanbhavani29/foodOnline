@@ -1,10 +1,26 @@
+from imaplib import _Authenticator
 from pyexpat.errors import messages
+from django.contrib import auth
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-
+from django.contrib.auth.decorators import login_required,user_passes_test
 from accounts.forms import UserForm
 from accounts.models import User, UserProfile
+from accounts.utils import detectuser
 from vendor.forms import VendorForm
+from django.core.exceptions import PermissionDenied
+def check_role_vendor(user):
+   if user.role == 1:
+       return True
+   else: 
+      raise PermissionDenied
+def check_role_customer(user):
+   if user.role == 2:
+       return True
+   else: 
+      raise PermissionDenied
+   
 def register_user(request):
     if request.method=='POST':
         #store data 
@@ -72,3 +88,53 @@ def register_ven(request):
         'v_form':v_form
     }
     return  render(request,"accounts/registerVendor.html",context)
+def login(request):
+  if request.user.is_authenticated:
+     messages.warning(request,"You are already loged in")
+     return redirect('myaccount')
+  elif request.method =='POST':
+     email=request.POST['email']
+     password=request.POST['password']
+     user=auth.authenticate(email=email,password=password)
+     if user is not None:
+        auth.login(request,user)
+        messages.success(request,"Yoy are loged in")
+        return redirect('myaccount')
+     else:
+      messages.error(request,"Invalid credentials")
+     return redirect('Login')
+  return render(request,"accounts/login.html")
+
+def logout(request):
+   auth.logout(request)
+   messages.info(request,"You are logged Out")
+   return redirect('Login')
+
+def dashboard(request):
+   return render(request,"accounts/dashboard.html")
+@login_required(login_url='Login')
+ 
+def myaccount(request):
+    user = request.user
+    redirecturl = detectuser(user)
+
+    if redirecturl:  # Ensure it's not None
+        return redirect(redirecturl)
+    
+    return redirect('dashboard')  # Default fallback
+
+# @login_required(login_url='Login')
+# def myaccount(request):
+#    user=request.user
+#    redirecturl=detectuser(user)
+#    return redirect(redirecturl)
+ 
+@login_required(login_url='Login')
+@user_passes_test(check_role_customer)
+def customerDashboard(request):
+   return render(request,'accounts/custDashboard.html')  # Use the correct URL name
+    
+@login_required(login_url='Login')
+@user_passes_test(check_role_vendor)
+def vendorDashboard(request):
+   return render(request,'accounts/vendDashboard.html')

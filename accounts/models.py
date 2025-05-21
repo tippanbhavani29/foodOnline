@@ -62,6 +62,12 @@ class User(AbstractBaseUser):
             return self.is_admin
         def has_module_perms(self,app_label):
             return True
+        def get_role(self):
+             if self.role == 1:
+                 user_role='vendor'
+             elif self.role == 2: 
+                 user_role= 'customer'
+             return user_role
  
 
 class UserProfile(models.Model):
@@ -81,11 +87,12 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username  # Display username properly
+     
  
 #post_save.connect(post_save_create_profile_reciever,sender=User)
 
 
-
+     
 
 
 

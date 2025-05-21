@@ -9,7 +9,7 @@ class Vendor(models.Model):
     vendor_name=models.CharField(max_length=50)
     vendor_licence=models.ImageField(upload_to='vendor/licence')
     is_approved=models.BooleanField(default=False)
-    created_At=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now_add=True)
     modified_at=models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.vendor_name
