@@ -151,3 +151,9 @@ MESSAGE_TAGS={
     messages.ERROR:'danger'
 }
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+EMAIL_HOST='smpt.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='tbhavani2905@gmail.com'
+EMAIL_HOST_PASSWORD='bhavanilokesh@2005'
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL='food online marketplace <tbhavani2905@gmail.com>'
